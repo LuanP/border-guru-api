@@ -1,0 +1,9 @@
+module.exports = {
+  sourceFiles: './docs/*.md',
+  debugMode: true,
+  watch: true,
+  discover: true,
+  public: true,
+  serverPort: 4000,
+  delay: 1000
+}
