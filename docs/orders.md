@@ -19,12 +19,17 @@ A simple API allowing consumers to view and create orders.
         [
           {
             "id": 1,
+            "price": {
+              "amount": 1700.00,
+              "currency": "EUR"
+            },
             "customer": {
               "name": "Peter Lustig",
               "address": {
                 "streetAddress": "Steindamm 80"
               },
               "item": {
+                "id": 1,
                 "name": "Macbook",
                 "price": {
                   "amount": 1700.00,
@@ -65,6 +70,10 @@ A simple API allowing consumers to view and create orders.
 
             {
               "id": 1,
+              "price": {
+                "amount": 1700,
+                "currency": "EUR"
+              },
               "customer": {
                 "name": "Peter Lustig",
                 "address": {
@@ -114,6 +123,10 @@ A simple API allowing consumers to view and create orders.
 
             {
               "id": 1,
+              "price": {
+                "amount": 1700.00,
+                "currency": "EUR"
+              },
               "customer": {
                 "name": "Peter Lustig",
                 "address": {
