@@ -1,0 +1,30 @@
+version: '3.5'
+services:
+  db:
+    image: 'mysql:latest'
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: border_guru_api
+      MYSQL_USER: border_guru_api
+      MYSQL_PASSWORD: border_guru_api
+  web:
+    build: .
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: border_guru_api
+      DB_USERNAME: border_guru_api
+      DB_PASSWORD: border_guru_api
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+volumes:
+  db_data:
