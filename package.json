@@ -24,5 +24,12 @@
   "bugs": {
     "url": "https://gitlab.com/LuanP/border-guru-api/issues"
   },
-  "homepage": "https://gitlab.com/LuanP/border-guru-api#README"
+  "homepage": "https://gitlab.com/LuanP/border-guru-api#README",
+  "dependencies": {
+    "config": "^1.30.0",
+    "koa": "^2.5.1"
+  },
+  "devDependencies": {
+    "dotenv": "^6.0.0"
+  }
 }
