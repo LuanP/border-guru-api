@@ -13,7 +13,10 @@
     "test-mocha": "NODE_CONFIG_DIR=./src/config NODE_ENV=test mocha --harmony --exit ./src/**/*.spec.js",
     "lint": "standard --verbose | snazzy",
     "fixcode": "standard --fix",
-    "mock-server": "npm install -g drakov && drakov"
+    "mock-server": "npm install -g drakov && drakov",
+    "git-hook": "npm run lint -s && npm run test -s",
+    "precommit": "npm run git-hook",
+    "prepush": "npm run git-hook"
   },
   "repository": {
     "type": "git",
@@ -41,6 +44,7 @@
     "chai": "^4.1.2",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
+    "husky": "^0.14.3",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.0",
     "nyc": "^12.0.2",
