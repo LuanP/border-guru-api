@@ -9,7 +9,11 @@
   "scripts": {
     "start": "node src/server.js",
     "local": "cross-env nodemon --inspect src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint && NODE_CONFIG_DIR=./src/config NODE_ENV=test nyc --check-coverage --lines 80 npm run test-mocha",
+    "test-mocha": "NODE_CONFIG_DIR=./src/config NODE_ENV=test mocha --harmony --exit ./src/**/*.spec.js",
+    "lint": "standard --verbose | snazzy",
+    "fixcode": "standard --fix",
+    "mock-server": "npm install -g drakov && drakov"
   },
   "repository": {
     "type": "git",
@@ -29,11 +33,42 @@
   "homepage": "https://gitlab.com/LuanP/border-guru-api#README",
   "dependencies": {
     "config": "^1.30.0",
-    "koa": "^2.5.1"
+    "koa": "^2.5.1",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
-    "nodemon": "^1.18.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.0",
+    "nyc": "^12.0.2",
+    "snazzy": "^7.1.1",
+    "standard": "^11.0.1",
+    "supertest": "^3.1.0"
+  },
+  "engines": {
+    "node": "8.11.3",
+    "npm": "6.1.0"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "beforeEach",
+      "afterEach"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "src/**/*.spec.js"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "all": false
   }
 }

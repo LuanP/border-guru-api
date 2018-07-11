@@ -5,6 +5,8 @@ const config = require('config')
 const Koa = require('koa')
 const app = new Koa()
 
+require('./routes')(app)
+
 if (!module.parent) {
   app.listen(config.port, config.ip, function () {
     console.log('Koa server listening on %d, in %s mode', config.port, config.env)
