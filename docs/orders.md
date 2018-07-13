@@ -40,7 +40,7 @@ A simple API allowing consumers to view and create orders.
           }
         ]
 
-### Create Order [POST /orders]
+### Create Order [POST /v1/orders]
 
 + Request (application/json)
 
