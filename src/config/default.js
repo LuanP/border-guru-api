@@ -13,7 +13,16 @@ try {
 const base = {
   port: process.env.PORT || 3000,
   ip: process.env.IP,
-  env: env
+  env: env,
+  db: {
+    username: process.env.DB_USERNAME || 'border_guru_username',
+    password: process.env.DB_PASSWORD || 'border_guru_password',
+    name: process.env.DB_NAME || 'border_guru_dbname',
+    options: {
+      host: process.env.DB_HOST || 'localhost',
+      dialect: process.env.DB_DIALECT || 'mysql'
+    }
+  }
 }
 
 module.exports = base
