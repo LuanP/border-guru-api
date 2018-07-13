@@ -10,15 +10,6 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false
       },
-      addressId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        field: 'address_id',
-        references: {
-          model: 'addresses',
-          key: 'id'
-        }
-      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('CURRENT_TIMESTAMP'),

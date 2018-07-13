@@ -6,6 +6,15 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
+      customerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'customer_id',
+        references: {
+          model: 'customers',
+          key: 'id'
+        }
+      },
       streetName: {
         type: Sequelize.STRING(255),
         allowNull: false,
