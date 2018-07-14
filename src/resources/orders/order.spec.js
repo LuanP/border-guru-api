@@ -1,3 +1,4 @@
+const R = require('ramda')
 const assert = require('chai').assert
 const sinon = require('sinon')
 
@@ -9,22 +10,54 @@ const models = require('./order.model')
 
 const sandbox = sinon.createSandbox()
 
+const orderJson = [
+  {
+    id: 1,
+    customerId: 1,
+    itemId: 1,
+    priceAmount: '1700.00',
+    priceCurrency: 'EUR',
+    createdAt: '2018-07-14T04:16:52.000Z',
+    updatedAt: '2018-07-14T04:16:52.000Z',
+    customer: {
+      id: 1,
+      name: 'Peter Lustig',
+      createdAt: '2018-07-14T04:15:14.000Z',
+      updatedAt: '2018-07-14T04:15:14.000Z',
+      addresses: [
+        {
+          id: 1,
+          customerId: 1,
+          streetName: 'Steindamm 80',
+          createdAt: '2018-07-14T04:15:28.000Z',
+          updatedAt: '2018-07-14T04:15:28.000Z'
+        }
+      ]
+    },
+    item: {
+      id: 1,
+      name: 'Macbook',
+      priceAmount: '1700.00',
+      priceCurrency: 'EUR',
+      createdAt: '2018-07-14T04:16:15.000Z',
+      updatedAt: '2018-07-14T04:16:15.000Z'
+    }
+  }
+]
+
+const orderResponse = [
+  R.pick(
+    ['id', 'priceAmount', 'priceCurrency', 'createdAt', 'updatedAt', 'customer', 'item'],
+    orderJson[0]
+  )
+]
+
 const _order = {
   toJSON: () => {
-    return [
-      {
-        id: 1,
-        customerId: 1,
-        itemId: 1,
-        priceAmount: '10.50',
-        priceCurrency: 'usd',
-        createdAt: '2018-07-14T04:16:52.000Z',
-        updatedAt: '2018-07-14T04:16:52.000Z'
-      }
-    ]
+    return orderJson[0]
   }
 }
-const order = Object.create(_order)
+const orders = [Object.create(_order)]
 
 const validationResponseBody = {
   data: [
@@ -98,20 +131,42 @@ describe('orders resource', () => {
       })
   })
 
-  it('successfully finds orders from customer', (done) => {
-    OrderSchema.findAll.resolves(order)
-    request.get('/v1/orders?customer.name=Peter Lustig')
+  it('successfully finds orders', (done) => {
+    OrderSchema.findAll.resolves(R.clone(orders))
+    request.get('/v1/orders')
       .expect(200)
       .end((err, res) => {
         if (err) throw err
 
         sandbox.assert.calledWith(
           models.getOrders,
-          'Peter Lustig',
+          undefined,
           undefined
+        )
+
+        assert.deepEqual(
+          res.body,
+          orderResponse
         )
 
         done()
       })
   })
+
+  // it('successfully finds orders from customer', (done) => {
+  //   OrderSchema.findAll.resolves(order)
+  //   request.get('/v1/orders?customer.name=Peter Lustig')
+  //     .expect(200)
+  //     .end((err, res) => {
+  //       if (err) throw err
+
+  //       sandbox.assert.calledWith(
+  //         models.getOrders,
+  //         'Peter Lustig',
+  //         undefined
+  //       )
+
+  //       done()
+  //     })
+  // })
 })

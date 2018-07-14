@@ -44,7 +44,28 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Item.prototype.toJSON = function () {
-    return R.pickBy((item) => !R.isNil(item) && !R.isEmpty(item), this.dataValues)
+    const objs = R.compose(
+      (obj) => {
+        if (obj.hasOwnProperty('toJSON')) {
+          return obj.toJSON()
+        }
+
+        return R.pickBy((o) => !R.isNil(o) && !R.isEmpty(o), obj)
+      },
+      R.pickBy((obj) => R.is(Object, obj) && !R.is(Date, obj))
+    )(this.dataValues)
+
+    const newDataValues = R.pickBy(
+      (obj) => !R.isNil(obj) && !R.isEmpty(obj),
+      Object.assign({}, this.dataValues, objs)
+    )
+
+    const standardOutput = {}
+    for (let key in newDataValues) {
+      standardOutput[`${key[0].toLowerCase()}${key.slice(1)}`] = newDataValues[key]
+    }
+
+    return standardOutput
   }
 
   Item.associate = (models) => {
