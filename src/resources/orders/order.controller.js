@@ -73,4 +73,19 @@ Order.createOrder = async (ctx) => {
   })
 }
 
+Order.deleteOrder = async (ctx) => {
+  const schema = Joi.object().keys({
+    id: Joi.number().integer().required()
+  }).required()
+
+  const result = Joi.validate(ctx.params, schema, { abortEarly: false })
+  if (result.error) {
+    throw result.error
+  }
+
+  await models.deleteOrder(result.value.id)
+
+  ctx.status = 204
+}
+
 module.exports = Order

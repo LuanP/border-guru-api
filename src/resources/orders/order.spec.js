@@ -155,6 +155,7 @@ describe('orders resource', () => {
     sandbox.stub(ItemSchema, 'findOrCreate')
     sandbox.stub(OrderSchema, 'create')
     sandbox.stub(OrderSchema, 'findOne')
+    sandbox.stub(OrderSchema, 'destroy')
     sandbox.spy(models, 'getOrders')
   })
 
@@ -344,6 +345,27 @@ describe('orders resource', () => {
         assert(
           res.headers['location'] === `/v1/orders/${orderId}`,
           'location header must point to the new object'
+        )
+
+        done()
+      })
+  })
+
+  it('successfully deletes order', (done) => {
+    OrderSchema.destroy.resolves(null)
+    request.delete('/v1/orders/1')
+      .expect(204)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(OrderSchema.destroy)
+        sandbox.assert.calledWith(
+          OrderSchema.destroy,
+          {
+            where: {
+              id: { [Op.eq]: 1 }
+            }
+          }
         )
 
         done()

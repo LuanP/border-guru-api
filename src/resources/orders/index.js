@@ -5,5 +5,6 @@ const router = new Router()
 
 router.get('/', controller.getOrders)
 router.post('/', controller.createOrder)
+router.delete('/:id', controller.deleteOrder)
 
 module.exports = router.routes()

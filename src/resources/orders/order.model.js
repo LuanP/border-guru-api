@@ -93,4 +93,12 @@ Order.createOrder = async (customer, item, t) => {
   )
 }
 
+Order.deleteOrder = async (orderId) => {
+  return OrderSchema.destroy({
+    where: {
+      id: { [Op.eq]: orderId }
+    }
+  })
+}
+
 module.exports = Order
