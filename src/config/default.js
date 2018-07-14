@@ -17,6 +17,7 @@ const base = {
   port: process.env.PORT || 3000,
   ip: process.env.IP,
   majorVersion: major,
+  logType: env === 'development' ? 'dev' : '',
   env: env,
   db: {
     username: process.env.DB_USERNAME || 'border_guru_username',

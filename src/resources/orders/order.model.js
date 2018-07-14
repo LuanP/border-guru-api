@@ -1,4 +1,6 @@
 const R = require('ramda')
+const Op = require('sequelize').Op
+const sequelize = require('../../utils/sequelize').sequelize
 const OrderSchema = require('../../utils/sequelize').Order
 const CustomerSchema = require('../../utils/sequelize').Customer
 const ItemSchema = require('../../utils/sequelize').Item
@@ -48,15 +50,35 @@ Order.getOrderById = async (orderId, t) => {
 }
 
 Order.getOrders = async (customerName, customerAddress) => {
-  return OrderSchema.findAll({
+  const filters = {
     include: [
       {
         model: CustomerSchema,
-        include: [AddressSchema]
+        include: [AddressSchema],
+        where: {}
       },
       ItemSchema
     ]
-  }).then((orders) => R.map(Order.standardResponse, orders))
+  }
+
+  if (customerName) {
+    filters.include[0].where['name'] = {
+      [Op.eq]: customerName
+    }
+  }
+
+  if (customerAddress) {
+    filters.where = sequelize.where(
+      sequelize.col('Customer->Addresses.street_name'),
+      customerAddress
+    )
+  }
+
+  return OrderSchema
+    .findAll(filters)
+    .then((orders) => {
+      return R.map(Order.standardResponse, orders)
+    })
 }
 
 Order.createOrder = async (customer, item, t) => {

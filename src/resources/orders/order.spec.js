@@ -1,6 +1,7 @@
 const R = require('ramda')
 const assert = require('chai').assert
 const sinon = require('sinon')
+const Op = require('sequelize').Op
 
 const app = require('../../server')
 const request = require('supertest').agent(app.listen())
@@ -214,6 +215,79 @@ describe('orders resource', () => {
           models.getOrders,
           undefined,
           undefined
+        )
+
+        assert.deepEqual(
+          res.body,
+          orderResponse
+        )
+
+        done()
+      })
+  })
+
+  it('successfully finds orders with customer name', (done) => {
+    OrderSchema.findAll.resolves(orders)
+    request.get('/v1/orders?customer.name=Peter Lustig')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledWith(
+          models.getOrders,
+          'Peter Lustig',
+          undefined
+        )
+
+        sandbox.assert.calledWith(
+          OrderSchema.findAll,
+          {
+            include: [
+              {
+                model: CustomerSchema,
+                include: [AddressSchema],
+                where: {name: {[Op.eq]: 'Peter Lustig'}}
+              },
+              ItemSchema
+            ]
+          }
+        )
+
+        assert.deepEqual(
+          res.body,
+          orderResponse
+        )
+
+        done()
+      })
+  })
+
+  it('successfully finds orders with customer address', (done) => {
+    OrderSchema.findAll.resolves(orders)
+    request.get('/v1/orders?customer.address=Steindamm 80')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledWith(
+          models.getOrders,
+          undefined,
+          'Steindamm 80'
+        )
+
+        sandbox.assert.calledWith(
+          OrderSchema.findAll,
+          {
+            include: [
+              {
+                model: CustomerSchema,
+                include: [AddressSchema],
+                where: {}
+              },
+              ItemSchema
+            ],
+            where: sequelize.where(sequelize.col('Customer->Addresses.street_name'), 'Steindamm 80')
+          }
         )
 
         assert.deepEqual(
