@@ -20,22 +20,35 @@ A simple API allowing consumers to view and create orders.
           {
             "id": 1,
             "price": {
-              "amount": 1700.00,
+              "amount": "1700.00",
               "currency": "EUR"
             },
+            "createdAt": "2018-07-14T04:16:52.000Z",
+            "updatedAt": "2018-07-14T04:16:52.000Z",
             "customer": {
+              "id": 1,
               "name": "Peter Lustig",
-              "address": {
-                "streetAddress": "Steindamm 80"
-              },
-              "item": {
-                "id": 1,
-                "name": "Macbook",
-                "price": {
-                  "amount": 1700.00,
-                  "currency": "EUR"
+              "createdAt": "2018-07-14T04:15:14.000Z",
+              "updatedAt": "2018-07-14T04:15:14.000Z",
+              "addresses": [
+                {
+                  "id": 1,
+                  "customerId": 1,
+                  "streetName": "Steindamm 80",
+                  "createdAt": "2018-07-14T04:15:28.000Z",
+                  "updatedAt": "2018-07-14T04:15:28.000Z"
                 }
-              }
+              ]
+            },
+            "item": {
+              "id": 1,
+              "name": "Macbook",
+              "price": {
+                "amount": "1700.00",
+                "currency": "EUR"
+              },
+              "createdAt": "2018-07-14T04:16:15.000Z",
+              "updatedAt": "2018-07-14T04:16:15.000Z"
             }
           }
         ]
@@ -53,7 +66,7 @@ A simple API allowing consumers to view and create orders.
             "item": {
               "name": "Macbook",
               "price": {
-                "amount": 1700.00,
+                "amount": "1700.00",
                 "currency": "EUR"
               }
             }
@@ -71,7 +84,7 @@ A simple API allowing consumers to view and create orders.
             {
               "id": 1,
               "price": {
-                "amount": 1700,
+                "amount": "1700.00",
                 "currency": "EUR"
               },
               "customer": {
@@ -82,7 +95,7 @@ A simple API allowing consumers to view and create orders.
                 "item": {
                   "name": "Macbook",
                   "price": {
-                    "amount": 1700,
+                    "amount": "1700.00",
                     "currency": "EUR"
                   }
                 }
@@ -106,7 +119,7 @@ A simple API allowing consumers to view and create orders.
             "item": {
               "name": "Macbook",
               "price": {
-                "amount": 1700.00,
+                "amount": "1700.00",
                 "currency": "EUR"
               }
             }
@@ -121,26 +134,42 @@ A simple API allowing consumers to view and create orders.
 
     + Body
 
-            {
-              "id": 1,
-              "price": {
-                "amount": 1700.00,
-                "currency": "EUR"
-              },
-              "customer": {
-                "name": "Peter Lustig",
-                "address": {
-                  "streetAddress": "Steindamm 81"
+            [
+              {
+                "id": 1,
+                "price": {
+                  "amount": "1700.00",
+                  "currency": "EUR"
+                },
+                "createdAt": "2018-07-14T04:16:52.000Z",
+                "updatedAt": "2018-07-14T04:16:52.000Z",
+                "customer": {
+                  "id": 1,
+                  "name": "Peter Lustig",
+                  "createdAt": "2018-07-14T04:15:14.000Z",
+                  "updatedAt": "2018-07-14T04:15:14.000Z",
+                  "addresses": [
+                    {
+                      "id": 1,
+                      "customerId": 1,
+                      "streetName": "Steindamm 80",
+                      "createdAt": "2018-07-14T04:15:28.000Z",
+                      "updatedAt": "2018-07-14T04:15:28.000Z"
+                    }
+                  ]
                 },
                 "item": {
+                  "id": 1,
                   "name": "Macbook",
                   "price": {
-                    "amount": 1700.00,
+                    "amount": "1700.00",
                     "currency": "EUR"
-                  }
+                  },
+                  "createdAt": "2018-07-14T04:16:15.000Z",
+                  "updatedAt": "2018-07-14T04:16:15.000Z"
                 }
               }
-            }
+            ]
 
 ### Delete Order [DELETE /v1/orders/{id}]
 
@@ -161,6 +190,7 @@ It list all the item names and how many times they have been ordered, it shows t
         [
           {
             "item": {
+              "id": 1,
               "name": "Macbook"
             },
             "info": {
