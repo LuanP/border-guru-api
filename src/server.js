@@ -5,6 +5,10 @@ const config = require('config')
 const Koa = require('koa')
 const app = new Koa()
 
+const errorMiddleware = require('./middlewares/error')
+
+app.use(errorMiddleware)
+
 require('./routes')(app)
 
 if (!module.parent) {
