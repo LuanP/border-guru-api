@@ -1,6 +1,9 @@
 const path = require('path')
 const env = process.env.NODE_ENV || 'development'
 const root = path.join(__dirname, '..', '..')
+const pjson = require('../../package.json')
+
+const major = pjson.version.split('.')[0]
 
 try {
   require('dotenv').config({path: path.join(root, `.env-${env.toLowerCase()}`)})
@@ -13,6 +16,7 @@ try {
 const base = {
   port: process.env.PORT || 3000,
   ip: process.env.IP,
+  majorVersion: major,
   env: env,
   db: {
     username: process.env.DB_USERNAME || 'border_guru_username',

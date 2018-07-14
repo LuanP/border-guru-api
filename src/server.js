@@ -2,11 +2,13 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 process.env.NODE_CONFIG_DIR = process.env.NODE_CONFIG_DIR || './src/config'
 
 const config = require('config')
+const bodyParser = require('koa-bodyparser')
 const Koa = require('koa')
 const app = new Koa()
 
 const errorMiddleware = require('./middlewares/error')
 
+app.use(bodyParser())
 app.use(errorMiddleware)
 
 require('./routes')(app)

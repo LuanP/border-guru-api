@@ -5,10 +5,30 @@ const sinon = require('sinon')
 const app = require('../../server')
 const request = require('supertest').agent(app.listen())
 
+const sequelize = require('../../utils/sequelize').sequelize
+const CustomerSchema = require('../../utils/sequelize').Customer
+const AddressSchema = require('../../utils/sequelize').Address
+const ItemSchema = require('../../utils/sequelize').Item
 const OrderSchema = require('../../utils/sequelize').Order
 const models = require('./order.model')
 
 const sandbox = sinon.createSandbox()
+
+const createOrderBody = {
+  customer: {
+    name: 'Peter Lustig',
+    address: {
+      streetName: 'Steindamm 80'
+    }
+  },
+  item: {
+    name: 'Macbook',
+    price: {
+      amount: '1700.00',
+      currency: 'EUR'
+    }
+  }
+}
 
 const orderJson = [
   {
@@ -46,13 +66,59 @@ const orderJson = [
 ]
 
 const orderResponse = [
-  R.pick(
-    ['id', 'priceAmount', 'priceCurrency', 'createdAt', 'updatedAt', 'customer', 'item'],
-    orderJson[0]
-  )
+  {
+    id: orderJson[0].id,
+    createdAt: orderJson[0].createdAt,
+    updatedAt: orderJson[0].updatedAt,
+    customer: orderJson[0].customer,
+    item: {
+      id: orderJson[0].item.id,
+      name: orderJson[0].item.name,
+      createdAt: orderJson[0].item.createdAt,
+      updatedAt: orderJson[0].item.updatedAt,
+      price: {
+        amount: orderJson[0].item.priceAmount,
+        currency: orderJson[0].item.priceCurrency
+      }
+    },
+    price: {
+      amount: orderJson[0].priceAmount,
+      currency: orderJson[0].priceCurrency
+    }
+  }
 ]
 
+const _customer = Object.create({
+  toJSON: () => {
+    return {
+      id: 1,
+      name: 'Peter Lustig'
+    }
+  }
+})
+
+const _address = Object.create({
+  toJSON: () => {
+    return {
+      id: 1,
+      streetName: 'Steindamm 80'
+    }
+  }
+})
+
+const _item = Object.create({
+  toJSON: () => {
+    return {
+      id: 1,
+      name: 'Macbook',
+      priceAmount: '1700.00',
+      priceCurrency: 'EUR'
+    }
+  }
+})
+
 const _order = {
+  id: 1,
   toJSON: () => {
     return orderJson[0]
   }
@@ -81,7 +147,13 @@ const validationResponseBody = {
 
 describe('orders resource', () => {
   beforeEach(() => {
+    sandbox.stub(sequelize, 'transaction')
     sandbox.stub(OrderSchema, 'findAll')
+    sandbox.stub(CustomerSchema, 'findOrCreate')
+    sandbox.stub(AddressSchema, 'findOrCreate')
+    sandbox.stub(ItemSchema, 'findOrCreate')
+    sandbox.stub(OrderSchema, 'create')
+    sandbox.stub(OrderSchema, 'findOne')
     sandbox.spy(models, 'getOrders')
   })
 
@@ -132,7 +204,7 @@ describe('orders resource', () => {
   })
 
   it('successfully finds orders', (done) => {
-    OrderSchema.findAll.resolves(R.clone(orders))
+    OrderSchema.findAll.resolves(orders)
     request.get('/v1/orders')
       .expect(200)
       .end((err, res) => {
@@ -153,20 +225,54 @@ describe('orders resource', () => {
       })
   })
 
-  // it('successfully finds orders from customer', (done) => {
-  //   OrderSchema.findAll.resolves(order)
-  //   request.get('/v1/orders?customer.name=Peter Lustig')
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       if (err) throw err
+  it('raises validation error on create order', (done) => {
+    const invalidCreateOrderBody = R.clone(createOrderBody)
+    delete invalidCreateOrderBody['customer']['address']
 
-  //       sandbox.assert.calledWith(
-  //         models.getOrders,
-  //         'Peter Lustig',
-  //         undefined
-  //       )
+    request.post('/v1/orders')
+      .send(invalidCreateOrderBody)
+      .expect(400)
+      .end((err, res) => {
+        if (err) throw err
 
-  //       done()
-  //     })
-  // })
+        done()
+      })
+  })
+
+  it('successfully creates order', (done) => {
+    sequelize.transaction.yields(null)
+    CustomerSchema.findOrCreate.resolves([_customer])
+    AddressSchema.findOrCreate.resolves([_address])
+    ItemSchema.findOrCreate.resolves([_item])
+    OrderSchema.create.resolves(_order)
+    OrderSchema.findOne.resolves(orders[0])
+
+    request.post('/v1/orders')
+      .send(createOrderBody)
+      .expect(201)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(sequelize.transaction)
+        sandbox.assert.calledOnce(CustomerSchema.findOrCreate)
+        sandbox.assert.calledOnce(AddressSchema.findOrCreate)
+        sandbox.assert.calledOnce(ItemSchema.findOrCreate)
+        sandbox.assert.calledOnce(OrderSchema.create)
+        sandbox.assert.calledOnce(OrderSchema.findOne)
+
+        assert.deepEqual(
+          res.body,
+          orderResponse[0],
+          'order must be in standard format'
+        )
+
+        const orderId = orderResponse[0].id
+        assert(
+          res.headers['location'] === `/v1/orders/${orderId}`,
+          'location header must point to the new object'
+        )
+
+        done()
+      })
+  })
 })

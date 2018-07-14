@@ -61,14 +61,14 @@ A simple API allowing consumers to view and create orders.
           "customer": {
             "name": "Peter Lustig",
             "address": {
-              "streetAddress": "Steindamm 80"
-            },
-            "item": {
-              "name": "Macbook",
-              "price": {
-                "amount": "1700.00",
-                "currency": "EUR"
-              }
+              "streetName": "Steindamm 80"
+            }
+          },
+          "item": {
+            "name": "Macbook",
+            "price": {
+              "amount": "1700.00",
+              "currency": "EUR"
             }
           }
         }
@@ -77,7 +77,7 @@ A simple API allowing consumers to view and create orders.
 
     + Headers
 
-            Location: /v1/orders/1
+            location: /v1/orders/1
 
     + Body
 
@@ -90,7 +90,7 @@ A simple API allowing consumers to view and create orders.
               "customer": {
                 "name": "Peter Lustig",
                 "address": {
-                  "streetAddress": "Steindamm 80"
+                  "streetName": "Steindamm 80"
                 },
                 "item": {
                   "name": "Macbook",
@@ -114,7 +114,7 @@ A simple API allowing consumers to view and create orders.
           "customer": {
             "name": "Peter Lustig",
             "address": {
-              "streetAddress": "Steindamm 81"
+              "streetName": "Steindamm 81"
             },
             "item": {
               "name": "Macbook",

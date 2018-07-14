@@ -11,6 +11,10 @@ module.exports = async (ctx, next) => {
       const newError = Boom.badRequest(err.name, err.details)
       ctx.body = Object.assign({}, { data: newError.data }, newError.output.payload)
       ctx.status = 400 // bad request
+    } else {
+      const newError = Boom.badImplementation(err.name, { errorName: err.name })
+      ctx.body = Object.assign({}, { data: newError.data }, newError.output.payload)
+      ctx.status = 500 // internal server error
     }
   }
 }
