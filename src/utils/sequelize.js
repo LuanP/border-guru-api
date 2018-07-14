@@ -9,7 +9,6 @@ const models = {}
 const defaults = {
   logging: config.logType === 'dev' ? console.log : undefined,
   define: {
-    underscored: true,
     timestamps: true,
     paranoid: true
   }

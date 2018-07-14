@@ -64,8 +64,8 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Order.associate = (models) => {
-    Order.belongsTo(models.Item, { foreignKey: 'item_id' })
-    Order.belongsTo(models.Customer, { foreignKey: 'customer_id' })
+    Order.belongsTo(models.Item, { foreignKey: 'itemId' })
+    Order.belongsTo(models.Customer, { foreignKey: 'customerId' })
   }
 
   return Order

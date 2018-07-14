@@ -11,9 +11,17 @@ const sandbox = sinon.createSandbox()
 
 const _order = {
   toJSON: () => {
-    return {
-      id: 1
-    }
+    return [
+      {
+        id: 1,
+        customerId: 1,
+        itemId: 1,
+        priceAmount: '10.50',
+        priceCurrency: 'usd',
+        createdAt: '2018-07-14T04:16:52.000Z',
+        updatedAt: '2018-07-14T04:16:52.000Z'
+      }
+    ]
   }
 }
 const order = Object.create(_order)
