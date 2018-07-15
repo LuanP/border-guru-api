@@ -42,7 +42,9 @@ Order.createOrder = async (ctx) => {
       }).required()
     }).required(),
     item: Joi.object().keys({
-      name: Joi.string(),
+      name: Joi.string().required(),
+      documentNumber: Joi.string().max(25),
+      email: Joi.string().max(255),
       price: Joi.object().keys({
         amount: Joi.string().required(),
         currency: Joi.string().required()
@@ -107,7 +109,9 @@ Order.updateOrder = async (ctx) => {
       }).required()
     }).required(),
     item: Joi.object().keys({
-      name: Joi.string(),
+      name: Joi.string().max(255).required(),
+      documentNumber: Joi.string().max(25),
+      email: Joi.string().max(255),
       price: Joi.object().keys({
         amount: Joi.string().required(),
         currency: Joi.string().required()
