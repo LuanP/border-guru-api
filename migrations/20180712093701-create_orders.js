@@ -16,6 +16,16 @@ module.exports = {
         },
         onDelete: 'NO ACTION'
       },
+      addressId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'address_id',
+        references: {
+          model: 'addresses',
+          key: 'id'
+        },
+        onDelete: 'NO ACTION'
+      },
       itemId: {
         type: Sequelize.INTEGER,
         allowNull: false,

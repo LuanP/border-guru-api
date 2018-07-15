@@ -60,12 +60,13 @@ Order.createOrder = async (ctx) => {
     const _customer = await customerModel.findOrCreateCustomer(order.customer, t)
     const customer = _customer[0].toJSON()
 
-    await addressModel.findOrCreateAddress(customer, order.customer.address, t)
+    const _address = await addressModel.findOrCreateAddress(customer, order.customer.address, t)
+    const address = _address[0].toJSON()
 
     const _item = await itemModel.findOrCreateItem(order.item, t)
     const item = _item[0].toJSON()
 
-    const newOrder = await models.createOrder(customer, item, t)
+    const newOrder = await models.createOrder(customer, address, item, t)
 
     ctx.set('location', `/v${config.majorVersion}/orders/${newOrder.id}`)
     ctx.body = await models.getOrderById(newOrder.id, t)

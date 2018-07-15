@@ -1,6 +1,5 @@
 const R = require('ramda')
 const Op = require('sequelize').Op
-const sequelize = require('../../utils/sequelize').sequelize
 const OrderSchema = require('../../utils/sequelize').Order
 const CustomerSchema = require('../../utils/sequelize').Customer
 const ItemSchema = require('../../utils/sequelize').Item
@@ -15,7 +14,18 @@ Order.standardResponse = (obj) => {
     id: obj.id,
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,
-    customer: obj.customer,
+    address: {
+      id: obj.address.id,
+      streetName: obj.address.streetName,
+      createdAt: obj.address.createdAt,
+      updatedAt: obj.address.updatedAt
+    },
+    customer: {
+      id: obj.customer.id,
+      name: obj.customer.name,
+      createdAt: obj.customer.createdAt,
+      updatedAt: obj.customer.updatedAt
+    },
     item: {
       id: obj.item.id,
       name: obj.item.name,
@@ -38,10 +48,8 @@ Order.getOrderById = async (orderId, t) => {
     .findOne({
       where: { id: orderId },
       include: [
-        {
-          model: CustomerSchema,
-          include: [AddressSchema]
-        },
+        CustomerSchema,
+        AddressSchema,
         ItemSchema
       ],
       transaction: t
@@ -54,7 +62,10 @@ Order.getOrders = async (customerName, customerAddress) => {
     include: [
       {
         model: CustomerSchema,
-        include: [AddressSchema],
+        where: {}
+      },
+      {
+        model: AddressSchema,
         where: {}
       },
       ItemSchema
@@ -68,10 +79,9 @@ Order.getOrders = async (customerName, customerAddress) => {
   }
 
   if (customerAddress) {
-    filters.where = sequelize.where(
-      sequelize.col('Customer->Addresses.street_name'),
-      customerAddress
-    )
+    filters.include[1].where['streetName'] = {
+      [Op.eq]: customerAddress
+    }
   }
 
   return OrderSchema
@@ -81,10 +91,11 @@ Order.getOrders = async (customerName, customerAddress) => {
     })
 }
 
-Order.createOrder = async (customer, item, t) => {
+Order.createOrder = async (customer, address, item, t) => {
   return OrderSchema.create(
     {
       customerId: customer.id,
+      addressId: address.id,
       itemId: item.id,
       priceAmount: item.priceAmount,
       priceCurrency: item.priceCurrency

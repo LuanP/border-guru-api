@@ -18,6 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: 'no action'
       },
+      addressId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'address_id',
+        references: {
+          model: 'addresses',
+          key: 'id'
+        },
+        onDelete: 'no action'
+      },
       itemId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -87,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
   Order.associate = (models) => {
     Order.belongsTo(models.Item, { foreignKey: 'itemId' })
     Order.belongsTo(models.Customer, { foreignKey: 'customerId' })
+    Order.belongsTo(models.Address, { foreignKey: 'addressId' })
   }
 
   return Order

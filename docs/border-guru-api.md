@@ -23,6 +23,12 @@ A simple API allowing consumers to view and create orders.
               "amount": "1700.00",
               "currency": "EUR"
             },
+            "address": {
+              "id": 1,
+              "streetName": "Steindamm 80",
+              "createdAt": "2018-07-14T04:15:28.000Z",
+              "updatedAt": "2018-07-14T04:15:28.000Z"
+            },
             "createdAt": "2018-07-14T04:16:52.000Z",
             "updatedAt": "2018-07-14T04:16:52.000Z",
             "customer": {
@@ -30,15 +36,6 @@ A simple API allowing consumers to view and create orders.
               "name": "Peter Lustig",
               "createdAt": "2018-07-14T04:15:14.000Z",
               "updatedAt": "2018-07-14T04:15:14.000Z",
-              "addresses": [
-                {
-                  "id": 1,
-                  "customerId": 1,
-                  "streetName": "Steindamm 80",
-                  "createdAt": "2018-07-14T04:15:28.000Z",
-                  "updatedAt": "2018-07-14T04:15:28.000Z"
-                }
-              ]
             },
             "item": {
               "id": 1,
@@ -87,17 +84,23 @@ A simple API allowing consumers to view and create orders.
                 "amount": "1700.00",
                 "currency": "EUR"
               },
+              "address": {
+                "id": 1,
+                "streetName": "Steindamm 80",
+                "createdAt": "2018-07-14T04:15:28.000Z",
+                "updatedAt": "2018-07-14T04:15:28.000Z"
+              },
               "customer": {
+                "id": 3,
                 "name": "Peter Lustig",
-                "address": {
-                  "streetName": "Steindamm 80"
-                },
-                "item": {
-                  "name": "Macbook",
-                  "price": {
-                    "amount": "1700.00",
-                    "currency": "EUR"
-                  }
+                "createdAt": "2018-07-14T04:15:28.000Z",
+                "updatedAt": "2018-07-14T04:15:28.000Z"
+              },
+              "item": {
+                "name": "Macbook",
+                "price": {
+                  "amount": "1700.00",
+                  "currency": "EUR"
                 }
               }
             }
@@ -128,10 +131,6 @@ A simple API allowing consumers to view and create orders.
 
 + Response 200 (application/json)
 
-    + Headers
-
-            Location: /v1/orders/1
-
     + Body
 
             [
@@ -141,22 +140,17 @@ A simple API allowing consumers to view and create orders.
                   "amount": "1700.00",
                   "currency": "EUR"
                 },
-                "createdAt": "2018-07-14T04:16:52.000Z",
-                "updatedAt": "2018-07-14T04:16:52.000Z",
+                "address": {
+                  "id": 1,
+                  "streetName": "Steindamm 80",
+                  "createdAt": "2018-07-14T04:15:28.000Z",
+                  "updatedAt": "2018-07-14T04:15:28.000Z"
+                },
                 "customer": {
                   "id": 1,
                   "name": "Peter Lustig",
                   "createdAt": "2018-07-14T04:15:14.000Z",
-                  "updatedAt": "2018-07-14T04:15:14.000Z",
-                  "addresses": [
-                    {
-                      "id": 1,
-                      "customerId": 1,
-                      "streetName": "Steindamm 80",
-                      "createdAt": "2018-07-14T04:15:28.000Z",
-                      "updatedAt": "2018-07-14T04:15:28.000Z"
-                    }
-                  ]
+                  "updatedAt": "2018-07-14T04:15:14.000Z"
                 },
                 "item": {
                   "id": 1,

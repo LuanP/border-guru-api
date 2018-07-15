@@ -40,20 +40,17 @@ const orderJson = [
     priceCurrency: 'EUR',
     createdAt: '2018-07-14T04:16:52.000Z',
     updatedAt: '2018-07-14T04:16:52.000Z',
+    address: {
+      id: 1,
+      streetName: 'Steindamm 80',
+      createdAt: '2018-07-14T04:15:28.000Z',
+      updatedAt: '2018-07-14T04:15:28.000Z'
+    },
     customer: {
       id: 1,
       name: 'Peter Lustig',
       createdAt: '2018-07-14T04:15:14.000Z',
-      updatedAt: '2018-07-14T04:15:14.000Z',
-      addresses: [
-        {
-          id: 1,
-          customerId: 1,
-          streetName: 'Steindamm 80',
-          createdAt: '2018-07-14T04:15:28.000Z',
-          updatedAt: '2018-07-14T04:15:28.000Z'
-        }
-      ]
+      updatedAt: '2018-07-14T04:15:14.000Z'
     },
     item: {
       id: 1,
@@ -71,7 +68,18 @@ const orderResponse = [
     id: orderJson[0].id,
     createdAt: orderJson[0].createdAt,
     updatedAt: orderJson[0].updatedAt,
-    customer: orderJson[0].customer,
+    address: {
+      id: 1,
+      streetName: 'Steindamm 80',
+      createdAt: '2018-07-14T04:15:28.000Z',
+      updatedAt: '2018-07-14T04:15:28.000Z'
+    },
+    customer: {
+      id: orderJson[0].customer.id,
+      name: orderJson[0].customer.name,
+      createdAt: orderJson[0].customer.createdAt,
+      updatedAt: orderJson[0].customer.updatedAt
+    },
     item: {
       id: orderJson[0].item.id,
       name: orderJson[0].item.name,
@@ -246,8 +254,11 @@ describe('orders resource', () => {
             include: [
               {
                 model: CustomerSchema,
-                include: [AddressSchema],
-                where: {name: {[Op.eq]: 'Peter Lustig'}}
+                where: { name: { [Op.eq]: 'Peter Lustig' } }
+              },
+              {
+                model: AddressSchema,
+                where: {}
               },
               ItemSchema
             ]
@@ -282,12 +293,14 @@ describe('orders resource', () => {
             include: [
               {
                 model: CustomerSchema,
-                include: [AddressSchema],
                 where: {}
               },
+              {
+                model: AddressSchema,
+                where: { streetName: { [Op.eq]: 'Steindamm 80' } }
+              },
               ItemSchema
-            ],
-            where: sequelize.where(sequelize.col('Customer->Addresses.street_name'), 'Steindamm 80')
+            ]
           }
         )
 
