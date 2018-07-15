@@ -173,9 +173,9 @@ A simple API allowing consumers to view and create orders.
 
 + Response 204
 
-## Items Collection [/v1/items]
+## Items Collection [/v1/items/informations]
 
-### List all the items [GET /v1/items]
+### List all the items [GET /v1/items/informations]
 It list all the item names and how many times they have been ordered, it shows the items that have been ordered the most at the beginning of the list, and in case of items with the same amount of occurrences, it's sorted by their names alphabetically.
 
 
