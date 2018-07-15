@@ -1,4 +1,4 @@
-const R = require('ramda')
+const toJSON = require('../../utils/sequelize-json')
 
 module.exports = (sequelize, DataTypes) => {
   let Address = sequelize.define('Address',
@@ -44,28 +44,7 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Address.prototype.toJSON = function () {
-    const objs = R.compose(
-      (obj) => {
-        if (obj.hasOwnProperty('toJSON')) {
-          return obj.toJSON()
-        }
-
-        return R.pickBy((o) => !R.isNil(o) && !R.isEmpty(o), obj)
-      },
-      R.pickBy((obj) => R.is(Object, obj) && !R.is(Date, obj))
-    )(this.dataValues)
-
-    const newDataValues = R.pickBy(
-      (obj) => !R.isNil(obj) && !R.isEmpty(obj),
-      Object.assign({}, this.dataValues, objs)
-    )
-
-    const standardOutput = {}
-    for (let key in newDataValues) {
-      standardOutput[`${key[0].toLowerCase()}${key.slice(1)}`] = newDataValues[key]
-    }
-
-    return standardOutput
+    return toJSON(this.dataValues)
   }
 
   Address.associate = (models) => {

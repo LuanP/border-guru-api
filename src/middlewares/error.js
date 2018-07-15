@@ -3,6 +3,10 @@ const Boom = require('boom')
 module.exports = async (ctx, next) => {
   try {
     await next()
+
+    if (ctx.status === 404) {
+      throw Boom.notFound('resource not found')
+    }
   } catch (err) {
     if (err.isBoom) {
       ctx.body = err.output.payload
