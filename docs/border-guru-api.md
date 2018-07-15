@@ -194,3 +194,20 @@ It list all the item names and how many times they have been ordered, it shows t
             }
           }
         ]
+
+## Customers Collection [/v1/customers]
+
+### Get customer information [GET /v1/customers/{id}]
+
++ Parameters
+
+  + id: 1 (number, required) - the order identifier
+
++ Response 200 (application/json)
+
+        {
+          "id": 3,
+          "name": "user name",
+          "createdAt": "2018-07-15T02:18:30.000Z",
+          "updatedAt": "2018-07-15T02:18:30.000Z"
+        }

@@ -9,4 +9,10 @@ Customer.findOrCreateCustomer = async (customer, t) => {
   })
 }
 
+Customer.getCustomerById = async (customerId) => {
+  return CustomerSchema.findOne({
+    where: { id: customerId }
+  })
+}
+
 module.exports = Customer
