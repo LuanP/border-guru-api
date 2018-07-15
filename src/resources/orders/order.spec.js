@@ -164,6 +164,7 @@ describe('orders resource', () => {
     sandbox.stub(OrderSchema, 'create')
     sandbox.stub(OrderSchema, 'findOne')
     sandbox.stub(OrderSchema, 'destroy')
+    sandbox.stub(OrderSchema, 'update')
     sandbox.spy(models, 'getOrders')
   })
 
@@ -348,6 +349,18 @@ describe('orders resource', () => {
         sandbox.assert.calledOnce(OrderSchema.create)
         sandbox.assert.calledOnce(OrderSchema.findOne)
 
+        sandbox.assert.calledWith(
+          OrderSchema.create,
+          {
+            customerId: orderResponse[0].customer.id,
+            addressId: orderResponse[0].address.id,
+            itemId: orderResponse[0].item.id,
+            priceAmount: orderResponse[0].price.amount,
+            priceCurrency: orderResponse[0].price.currency
+          },
+          { transaction: null }
+        )
+
         assert.deepEqual(
           res.body,
           orderResponse[0],
@@ -379,6 +392,54 @@ describe('orders resource', () => {
               id: { [Op.eq]: 1 }
             }
           }
+        )
+
+        done()
+      })
+  })
+
+  it('successfully updates order', (done) => {
+    sequelize.transaction.yields(null)
+    CustomerSchema.findOrCreate.resolves([_customer])
+    AddressSchema.findOrCreate.resolves([_address])
+    ItemSchema.findOrCreate.resolves([_item])
+    OrderSchema.update.resolves(null)
+    OrderSchema.findOne.resolves(orders[0])
+
+    request.put('/v1/orders/1')
+      .send(createOrderBody)
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(sequelize.transaction)
+        sandbox.assert.calledOnce(CustomerSchema.findOrCreate)
+        sandbox.assert.calledOnce(AddressSchema.findOrCreate)
+        sandbox.assert.calledOnce(ItemSchema.findOrCreate)
+        sandbox.assert.calledOnce(OrderSchema.update)
+        sandbox.assert.calledOnce(OrderSchema.findOne)
+
+        sandbox.assert.calledWith(
+          OrderSchema.update,
+          {
+            customerId: orderResponse[0].customer.id,
+            addressId: orderResponse[0].address.id,
+            itemId: orderResponse[0].item.id,
+            priceAmount: orderResponse[0].price.amount,
+            priceCurrency: orderResponse[0].price.currency
+          },
+          {
+            where: {
+              id: { [Op.eq]: 1 }
+            },
+            transaction: null
+          }
+        )
+
+        assert.deepEqual(
+          res.body,
+          orderResponse[0],
+          'order must be in standard format'
         )
 
         done()

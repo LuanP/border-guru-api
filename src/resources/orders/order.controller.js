@@ -89,4 +89,53 @@ Order.deleteOrder = async (ctx) => {
   ctx.status = 204
 }
 
+Order.updateOrder = async (ctx) => {
+  const paramSchema = Joi.object().keys({
+    id: Joi.number().integer().required()
+  }).required()
+
+  const paramResult = Joi.validate(ctx.params, paramSchema, { abortEarly: false })
+  if (paramResult.error) {
+    throw paramResult.error
+  }
+
+  const bodySchema = Joi.object().keys({
+    customer: Joi.object().keys({
+      name: Joi.string().required(),
+      address: Joi.object().keys({
+        streetName: Joi.string().required()
+      }).required()
+    }).required(),
+    item: Joi.object().keys({
+      name: Joi.string(),
+      price: Joi.object().keys({
+        amount: Joi.string().required(),
+        currency: Joi.string().required()
+      }).required()
+    }).required()
+  }).required()
+
+  const bodyResult = Joi.validate(ctx.request.body, bodySchema, { abortEarly: false })
+  if (bodyResult.error) {
+    throw bodyResult.error
+  }
+
+  const order = bodyResult.value
+  await sequelize.transaction(async (t) => {
+    const _customer = await customerModel.findOrCreateCustomer(order.customer, t)
+    const customer = _customer[0].toJSON()
+
+    const _address = await addressModel.findOrCreateAddress(customer, order.customer.address, t)
+    const address = _address[0].toJSON()
+
+    const _item = await itemModel.findOrCreateItem(order.item, t)
+    const item = _item[0].toJSON()
+
+    await models.updateOrder(paramResult.value.id, customer, address, item, t)
+
+    ctx.body = await models.getOrderById(paramResult.value.id, t)
+    ctx.status = 200
+  })
+}
+
 module.exports = Order

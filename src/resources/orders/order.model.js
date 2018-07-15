@@ -112,4 +112,20 @@ Order.deleteOrder = async (orderId) => {
   })
 }
 
+Order.updateOrder = async (orderId, customer, address, item, t) => {
+  return OrderSchema.update(
+    {
+      customerId: customer.id,
+      addressId: address.id,
+      itemId: item.id,
+      priceAmount: item.priceAmount,
+      priceCurrency: item.priceCurrency
+    },
+    {
+      where: { id: { [Op.eq]: orderId } },
+      transaction: t
+    }
+  )
+}
+
 module.exports = Order
