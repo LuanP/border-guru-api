@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- customers that bought a certain item
 - customers informations (amount of money spent)
 - finds all orders bought by a customer
 - delete customer

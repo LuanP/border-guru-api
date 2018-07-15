@@ -1,7 +1,9 @@
 const R = require('ramda')
+const Op = require('sequelize').Op
 const sequelize = require('../../utils/sequelize').sequelize
 const ItemSchema = require('../../utils/sequelize').Item
 const OrderSchema = require('../../utils/sequelize').Order
+const CustomerSchema = require('../../utils/sequelize').Customer
 
 const Item = () => {}
 
@@ -44,6 +46,31 @@ Item.getItemsInformations = async () => {
         }
       })
     )
+}
+
+Item.getCustomersByItemId = async (itemId) => {
+  return OrderSchema.findAll({
+    where: {
+      itemId: { [Op.eq]: itemId }
+    },
+    attibutes: ['Customer'],
+    include: [CustomerSchema]
+  }).then(
+    (orders) => {
+      const response = []
+      R.map((obj) => {
+        const order = obj.toJSON()
+        if (order.customer === undefined) {
+          // deleted customer
+          return
+        }
+
+        response.push(order.customer)
+      })(orders)
+
+      return response
+    }
+  )
 }
 
 module.exports = Item

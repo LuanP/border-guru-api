@@ -195,6 +195,19 @@ It list all the item names and how many times they have been ordered, it shows t
           }
         ]
 
+### Get customers that bought a certain item [GET /v1/items/{id}/customers]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 2,
+                "name": "Peter Lustig",
+                "createdAt": "2018-07-15T02:17:05.000Z",
+                "updatedAt": "2018-07-15T02:17:05.000Z"
+            }
+        ]
+
 ## Customers Collection [/v1/customers]
 
 ### Get customer information [GET /v1/customers/{id}]

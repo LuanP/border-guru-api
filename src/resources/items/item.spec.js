@@ -1,10 +1,12 @@
 const assert = require('chai').assert
 const sinon = require('sinon')
+const Op = require('sequelize').Op
 
 const app = require('../../server')
 const request = require('supertest').agent(app.listen())
 
 const OrderSchema = require('../../utils/sequelize').Order
+const CustomerSchema = require('../../utils/sequelize').Customer
 
 const sandbox = sinon.createSandbox()
 
@@ -110,6 +112,30 @@ const successResponse = [
   }
 ]
 
+const _orders = [
+  Object.create({
+    toJSON: () => {
+      return {
+        customer: {
+          id: 1,
+          name: 'Peter Lustig',
+          createdAt: new Date('2018-07-15T02:18:30.000Z'),
+          updatedAt: new Date('2018-07-15T02:18:30.000Z')
+        }
+      }
+    }
+  })
+]
+
+const customersResponse = [
+  {
+    id: 1,
+    name: 'Peter Lustig',
+    createdAt: '2018-07-15T02:18:30.000Z',
+    updatedAt: '2018-07-15T02:18:30.000Z'
+  }
+]
+
 describe('items resources', () => {
   beforeEach(() => {
     sandbox.stub(OrderSchema, 'findAll')
@@ -143,6 +169,35 @@ describe('items resources', () => {
         assert.deepEqual(
           res.body,
           successResponse
+        )
+
+        done()
+      })
+  })
+
+  it('successfully gets customers that bought a certain item', (done) => {
+    OrderSchema.findAll.resolves(_orders)
+    request.get('/v1/items/1/customers')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(OrderSchema.findAll)
+
+        sandbox.assert.calledWith(
+          OrderSchema.findAll,
+          {
+            where: {
+              itemId: { [Op.eq]: 1 }
+            },
+            attibutes: ['Customer'],
+            include: [CustomerSchema]
+          }
+        )
+
+        assert.deepEqual(
+          res.body,
+          customersResponse
         )
 
         done()
