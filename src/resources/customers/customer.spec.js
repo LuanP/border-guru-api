@@ -6,6 +6,9 @@ const request = require('supertest').agent(app.listen())
 
 const Op = require('sequelize').Op
 const CustomerSchema = require('../../utils/sequelize').Customer
+const OrderSchema = require('../../utils/sequelize').Order
+const AddressSchema = require('../../utils/sequelize').Address
+const ItemSchema = require('../../utils/sequelize').Item
 
 const sandbox = sinon.createSandbox()
 
@@ -58,14 +61,77 @@ const customerUpdatebody = {
 const body404 = {
   statusCode: 404,
   error: 'Not Found',
-  message: 'Not Found'
+  message: 'no customer found'
 }
+
+const orderJson = [
+  {
+    id: 1,
+    customerId: 1,
+    itemId: 1,
+    priceAmount: '1700.00',
+    priceCurrency: 'EUR',
+    createdAt: '2018-07-14T04:16:52.000Z',
+    updatedAt: '2018-07-14T04:16:52.000Z',
+    address: {
+      id: 1,
+      streetName: 'Steindamm 80',
+      createdAt: '2018-07-14T04:15:28.000Z',
+      updatedAt: '2018-07-14T04:15:28.000Z'
+    },
+    item: {
+      id: 1,
+      name: 'Macbook',
+      priceAmount: '1700.00',
+      priceCurrency: 'EUR',
+      createdAt: '2018-07-14T04:16:15.000Z',
+      updatedAt: '2018-07-14T04:16:15.000Z'
+    }
+  }
+]
+
+const orderResponse = [
+  {
+    id: orderJson[0].id,
+    createdAt: orderJson[0].createdAt,
+    updatedAt: orderJson[0].updatedAt,
+    address: {
+      id: 1,
+      streetName: 'Steindamm 80',
+      createdAt: '2018-07-14T04:15:28.000Z',
+      updatedAt: '2018-07-14T04:15:28.000Z'
+    },
+    item: {
+      id: orderJson[0].item.id,
+      name: orderJson[0].item.name,
+      createdAt: orderJson[0].item.createdAt,
+      updatedAt: orderJson[0].item.updatedAt,
+      price: {
+        amount: orderJson[0].item.priceAmount,
+        currency: orderJson[0].item.priceCurrency
+      }
+    },
+    price: {
+      amount: orderJson[0].priceAmount,
+      currency: orderJson[0].priceCurrency
+    }
+  }
+]
+
+const _orders = [
+  Object.create({
+    toJSON: () => {
+      return orderJson[0]
+    }
+  })
+]
 
 describe('customers resources', () => {
   beforeEach(() => {
     sandbox.stub(CustomerSchema, 'findOne')
     sandbox.stub(CustomerSchema, 'update')
     sandbox.stub(CustomerSchema, 'destroy')
+    sandbox.stub(OrderSchema, 'findAll')
   })
 
   afterEach(() => {
@@ -159,6 +225,36 @@ describe('customers resources', () => {
               id: { [Op.eq]: 1 }
             }
           }
+        )
+
+        done()
+      })
+  })
+
+  it('successfully finds all orders bought by a customer', (done) => {
+    OrderSchema.findAll.resolves(_orders)
+
+    request.get('/v1/customers/1/orders')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(OrderSchema.findAll)
+
+        sandbox.assert.calledWith(
+          OrderSchema.findAll,
+          {
+            where: { customerId: { [Op.eq]: 1 } },
+            include: [
+              AddressSchema,
+              ItemSchema
+            ]
+          }
+        )
+
+        assert.deepEqual(
+          res.body,
+          orderResponse
         )
 
         done()

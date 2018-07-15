@@ -1,5 +1,8 @@
 const Op = require('sequelize').Op
 const CustomerSchema = require('../../utils/sequelize').Customer
+const OrderSchema = require('../../utils/sequelize').Order
+const AddressSchema = require('../../utils/sequelize').Address
+const ItemSchema = require('../../utils/sequelize').Item
 
 const Customer = () => {}
 
@@ -34,6 +37,16 @@ Customer.deleteCustomer = async (customerId) => {
     where: {
       id: { [Op.eq]: customerId }
     }
+  })
+}
+
+Customer.findOrdersByCustomerId = async (customerId) => {
+  return OrderSchema.findAll({
+    where: { customerId: { [Op.eq]: customerId } },
+    include: [
+      AddressSchema,
+      ItemSchema
+    ]
   })
 }
 

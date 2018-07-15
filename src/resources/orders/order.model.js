@@ -10,7 +10,7 @@ const Order = () => {}
 Order.standardResponse = (obj) => {
   obj = obj.toJSON()
 
-  return {
+  const response = {
     id: obj.id,
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,
@@ -19,12 +19,6 @@ Order.standardResponse = (obj) => {
       streetName: obj.address.streetName,
       createdAt: obj.address.createdAt,
       updatedAt: obj.address.updatedAt
-    },
-    customer: {
-      id: obj.customer.id,
-      name: obj.customer.name,
-      createdAt: obj.customer.createdAt,
-      updatedAt: obj.customer.updatedAt
     },
     item: {
       id: obj.item.id,
@@ -41,6 +35,12 @@ Order.standardResponse = (obj) => {
       currency: obj.priceCurrency
     }
   }
+
+  if (obj.customer) {
+    response.customer = obj.customer
+  }
+
+  return response
 }
 
 Order.getOrderById = async (orderId, t) => {

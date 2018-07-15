@@ -238,3 +238,47 @@ It list all the item names and how many times they have been ordered, it shows t
               "createdAt": "2018-07-15T02:18:30.000Z",
               "updatedAt": "2018-07-15T14:21:48.000Z"
             }
+
+### Delete Customer [DELETE /v1/customers/{id}]
+
++ Parameters
+
+  + id: 1 (number, required) - the customer identifier
+
++ Response 204
+
+### Get all orders bought by a customer [GET /v1/customers/{id}/orders]
+
++ Parameters
+
+  + id: 1 (number, required) - the customer identifier
+
++ Response 200 (application/json)
+
+        [
+          {
+            "id": 1,
+            "price": {
+              "amount": "1700.00",
+              "currency": "EUR"
+            },
+            "address": {
+              "id": 1,
+              "streetName": "Steindamm 80",
+              "createdAt": "2018-07-14T04:15:28.000Z",
+              "updatedAt": "2018-07-14T04:15:28.000Z"
+            },
+            "createdAt": "2018-07-14T04:16:52.000Z",
+            "updatedAt": "2018-07-14T04:16:52.000Z",
+            "item": {
+              "id": 1,
+              "name": "Macbook",
+              "price": {
+                "amount": "1700.00",
+                "currency": "EUR"
+              },
+              "createdAt": "2018-07-14T04:16:15.000Z",
+              "updatedAt": "2018-07-14T04:16:15.000Z"
+            }
+          }
+        ]

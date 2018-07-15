@@ -1,7 +1,9 @@
+const R = require('ramda')
 const Joi = require('joi')
 const Boom = require('boom')
 
 const models = require('./customer.model')
+const orderModel = require('../orders/order.model')
 
 const Customer = () => {}
 
@@ -18,7 +20,7 @@ Customer.getCustomerById = async (ctx) => {
   const customer = await models.getCustomerById(result.value.id)
 
   if (customer === null) {
-    throw Boom.notFound()
+    throw Boom.notFound('no customer found')
   }
 
   ctx.body = customer
@@ -65,6 +67,29 @@ Customer.deleteCustomer = async (ctx) => {
   await models.deleteCustomer(result.value.id)
 
   ctx.status = 204
+}
+
+Customer.findOrdersByCustomerId = async (ctx) => {
+  const schema = Joi.object({
+    id: Joi.number().integer().required()
+  }).required()
+
+  const result = Joi.validate(ctx.params, schema, { abortEarly: false })
+  if (result.error) {
+    throw result.error
+  }
+
+  const orders = await models.findOrdersByCustomerId(result.value.id)
+    .then(
+      R.map(orderModel.standardResponse)
+    )
+
+  if (orders.length === 0) {
+    throw Boom.notFound('no orders found')
+  }
+
+  ctx.body = orders
+  ctx.status = 200
 }
 
 module.exports = Customer
