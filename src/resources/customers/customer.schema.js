@@ -12,6 +12,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false
       },
+      documentNumber: {
+        type: DataTypes.STRING(25),
+        allowNull: true,
+        field: 'document_number'
+      },
+      email: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
