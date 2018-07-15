@@ -52,4 +52,19 @@ Customer.updateCustomer = async (ctx) => {
   ctx.status = 200
 }
 
+Customer.deleteCustomer = async (ctx) => {
+  const schema = Joi.object({
+    id: Joi.number().integer().required()
+  }).required()
+
+  const result = Joi.validate(ctx.params, schema, { abortEarly: false })
+  if (result.error) {
+    throw result.error
+  }
+
+  await models.deleteCustomer(result.value.id)
+
+  ctx.status = 204
+}
+
 module.exports = Customer

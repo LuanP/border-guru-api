@@ -65,6 +65,7 @@ describe('customers resources', () => {
   beforeEach(() => {
     sandbox.stub(CustomerSchema, 'findOne')
     sandbox.stub(CustomerSchema, 'update')
+    sandbox.stub(CustomerSchema, 'destroy')
   })
 
   afterEach(() => {
@@ -136,6 +137,28 @@ describe('customers resources', () => {
         assert.deepEqual(
           res.body,
           successFullResponse
+        )
+
+        done()
+      })
+  })
+
+  it('successfully deletes customer', (done) => {
+    CustomerSchema.destroy.resolves(null)
+    request.delete('/v1/customers/1')
+      .expect(204)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(CustomerSchema.destroy)
+
+        sandbox.assert.calledWith(
+          CustomerSchema.destroy,
+          {
+            where: {
+              id: { [Op.eq]: 1 }
+            }
+          }
         )
 
         done()

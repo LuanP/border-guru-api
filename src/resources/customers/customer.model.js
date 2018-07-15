@@ -29,4 +29,12 @@ Customer.updateCustomer = async (customerId, customerBody) => {
   )
 }
 
+Customer.deleteCustomer = async (customerId) => {
+  return CustomerSchema.destroy({
+    where: {
+      id: { [Op.eq]: customerId }
+    }
+  })
+}
+
 module.exports = Customer
