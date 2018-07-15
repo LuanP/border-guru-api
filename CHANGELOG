@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.0] - 2018-07-15
 ### Added
+- README.md
+- LICENSE
+- .env.sample
+- items informations
+- update order
+- delete order
+- get orders by customer address
+- get orders by customer name
 - migrations with sequelize-cli
 - git hooks with husky (pre commit and pre push)
 - test cmd with mocha
