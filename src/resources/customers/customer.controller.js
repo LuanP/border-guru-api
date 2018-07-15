@@ -92,4 +92,14 @@ Customer.findOrdersByCustomerId = async (ctx) => {
   ctx.status = 200
 }
 
+Customer.getCustomersInformations = async (ctx) => {
+  const customersInformations = await models.getCustomersInformations()
+
+  if (customersInformations.length === 0) {
+    throw Boom.notFound('no customers found')
+  }
+
+  ctx.body = customersInformations
+}
+
 module.exports = Customer

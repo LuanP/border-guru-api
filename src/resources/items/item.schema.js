@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Item.associate = (models) => {
-    Item.hasMany(models.Order, { foreignKey: 'id' })
+    Item.hasMany(models.Order, { foreignKey: 'itemId' })
   }
 
   return Item

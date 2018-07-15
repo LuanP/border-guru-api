@@ -36,6 +36,52 @@ const _customerFull = Object.create({
   }
 })
 
+const _customersInformations = [
+  Object.create({
+    toJSON: () => {
+      return {
+        id: 1,
+        name: 'Peter Lustig',
+        documentNumber: '999999999',
+        email: 'example@example.com',
+        createdAt: new Date('2018-07-15T02:18:30.000Z'),
+        updatedAt: new Date('2018-07-15T02:18:30.000Z'),
+        orders: [
+          {
+            priceAmount: '1700.00',
+            priceCurrency: 'EUR'
+          }, {
+            priceAmount: '1000.50',
+            priceCurrency: 'EUR'
+          }, {
+            priceAmount: '800.00',
+            priceCurrency: 'USD'
+          }
+        ]
+      }
+    }
+  })
+]
+
+const customersInformartionsResponse = [
+  {
+    id: 1,
+    name: 'Peter Lustig',
+    documentNumber: '999999999',
+    email: 'example@example.com',
+    createdAt: '2018-07-15T02:18:30.000Z',
+    updatedAt: '2018-07-15T02:18:30.000Z',
+    info: {
+      EUR: {
+        spent: 2700.5
+      },
+      USD: {
+        spent: 800
+      }
+    }
+  }
+]
+
 const successResponse = {
   id: 1,
   name: 'Peter Lustig',
@@ -131,6 +177,7 @@ describe('customers resources', () => {
     sandbox.stub(CustomerSchema, 'findOne')
     sandbox.stub(CustomerSchema, 'update')
     sandbox.stub(CustomerSchema, 'destroy')
+    sandbox.stub(CustomerSchema, 'findAll')
     sandbox.stub(OrderSchema, 'findAll')
   })
 
@@ -255,6 +302,29 @@ describe('customers resources', () => {
         assert.deepEqual(
           res.body,
           orderResponse
+        )
+
+        done()
+      })
+  })
+
+  it('successfully gets customers informations', (done) => {
+    CustomerSchema.findAll.resolves(_customersInformations)
+    request.get('/v1/customers/informations')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+
+        sandbox.assert.calledOnce(CustomerSchema.findAll)
+
+        sandbox.assert.calledWith(
+          CustomerSchema.findAll,
+          { include: [OrderSchema] }
+        )
+
+        assert.deepEqual(
+          res.body,
+          customersInformartionsResponse
         )
 
         done()

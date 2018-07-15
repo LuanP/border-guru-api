@@ -282,3 +282,35 @@ It list all the item names and how many times they have been ordered, it shows t
             }
           }
         ]
+
+### Get customers informations [GET /v1/customers/informations]
+
++ Response 200 (application/json)
+
+        [
+          {
+            "id": 2,
+            "name": "Peter Lustig",
+            "createdAt": "2018-07-15T02:17:05.000Z",
+            "updatedAt": "2018-07-15T02:17:05.000Z",
+            "info": {
+              "EUR": {
+                "spent": 1700
+              }
+            }
+          },
+          {
+            "id": 4,
+            "name": "John Smith",
+            "createdAt": "2018-07-15T14:54:46.000Z",
+            "updatedAt": "2018-07-15T14:54:46.000Z",
+            "info": {
+              "EUR": {
+                "spent": 3710
+              },
+              "USD": {
+                "spent": 20.6
+              }
+            }
+          }
+        ]
