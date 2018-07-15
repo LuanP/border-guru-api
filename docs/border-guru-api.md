@@ -201,13 +201,40 @@ It list all the item names and how many times they have been ordered, it shows t
 
 + Parameters
 
-  + id: 1 (number, required) - the order identifier
+  + id: 1 (number, required) - the customer identifier
 
 + Response 200 (application/json)
 
         {
           "id": 3,
-          "name": "user name",
+          "name": "Peter Lustig",
           "createdAt": "2018-07-15T02:18:30.000Z",
           "updatedAt": "2018-07-15T02:18:30.000Z"
         }
+
+### Update Customer [PUT /v1/customers/{id}]
+
++ Parameters
+
+  + id: 1 (number, required) - the customer identifier
+
++ Request (application/json)
+
+        {
+          "name": "Peter Lustig",
+          "documentNumber": "999999998",
+          "email": "example@example.com"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": 3,
+              "name": "Peter Lustig",
+              "documentNumber": "999999998",
+              "email": "example@example.com",
+              "createdAt": "2018-07-15T02:18:30.000Z",
+              "updatedAt": "2018-07-15T14:21:48.000Z"
+            }
