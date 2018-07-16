@@ -17,7 +17,8 @@
     "mock-server": "npm install -g drakov && drakov",
     "git-hook": "npm run lint -s && npm run test -s",
     "precommit": "npm run git-hook",
-    "prepush": "npm run git-hook"
+    "prepush": "npm run git-hook",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "husky": "^0.14.3",
