@@ -39,7 +39,7 @@ It's recommended that you use docker-compose for running this project.
 
 The project uses `MySQL` as database.
 
-This project uses `dotenv`. If you want to use it copy the `env.sample` to `.env-{desired-env}` and edit it's variables.
+This project uses `dotenv`. If you want to use it copy the `.env.sample` to `.env-{desired-env}` and edit it's variables.
 
 ```
 cp .env.sample .env-stage
