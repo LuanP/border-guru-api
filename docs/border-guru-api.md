@@ -1,5 +1,4 @@
 FORMAT: 1A
-HOST: https://border-guru-api.luanpablo.com/
 
 # border-guru-api
 
